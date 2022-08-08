@@ -32,4 +32,18 @@ describe(endPointUrl, () => {
     expect(response.statusCode).toBe(500);
     expect(response.body).toStrictEqual(errorBody);
   });
+
+  // Test getTodos
+  it("GET /todos/", async () => {
+    // act
+    const response = await request(app).get(endPointUrl);
+
+    // assert
+    expect(response.statusCode).toBe(200);
+    // expect(typeof response.body).toBe("array"); // doesn't work well
+    expect(Array.isArray(response.body)).toBeTruthy();
+
+    expect(response.body[0].title).toBeDefined(); // we don't know the exact title value
+    expect(response.body[0].done).toBeDefined(); // we don't know the exact value
+  });
 });
