@@ -18,4 +18,18 @@ describe(endPointUrl, () => {
     expect(response.body.title).toBe(newTodo.title);
     expect(response.body.done).toBe(newTodo.done);
   });
+
+  // integration test for error handling
+  it("should return error 500 on malfored data with POST", async () => {
+    // arrange
+    const missingDoneData = { title: "Missing done property" };
+    const errorBody = {
+      message: "Todo validation failed: done: Path `done` is required.",
+    };
+    // act
+    const response = await request(app).post(endPointUrl).send(missingDoneData);
+    // assert
+    expect(response.statusCode).toBe(500);
+    expect(response.body).toStrictEqual(errorBody);
+  });
 });

@@ -11,7 +11,7 @@ let req, res, next;
 beforeEach(() => {
   req = httpMocks.createRequest(); // creates a mock with all the original implementation attributes
   res = httpMocks.createResponse();
-  next = null;
+  next = jest.fn();
 });
 
 describe("TodoController.createTodo", () => {
@@ -46,5 +46,18 @@ describe("TodoController.createTodo", () => {
     await TodoController.createTodo(req, res, next);
 
     expect(res._getJSONData()).toEqual(newTodo); // use toEqual to evalute 'value' not 'reference' (toBe)
+  });
+
+  // error handling unit test
+  it("should handle errors", async () => {
+    const errorMessage = { message: "Done promerty missing" };
+    const rejectedPromise = Promise.reject(errorMessage);
+    TodoModel.create.mockReturnValue(rejectedPromise); // mock a rejected promise returned by mongodb
+    // when we call 'create' inside our controller, we'll get this rejectedPromise automatically injected
+
+    await TodoController.createTodo(req, res, next);
+
+    // we expect that the next fn is called with the rejected message
+    expect(next).toBeCalledWith(errorMessage);
   });
 });
