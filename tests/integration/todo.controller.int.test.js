@@ -5,6 +5,8 @@ const newTodo = require("../mock-data/new-todo.json");
 
 // define endpoint to test
 const endPointUrl = "/todos/";
+// for testing GET todo by Id
+let firstTodo;
 
 // Integration Tests: we are actually using a real MongoDB instance and creating real objects
 describe(endPointUrl, () => {
@@ -45,5 +47,27 @@ describe(endPointUrl, () => {
 
     expect(response.body[0].title).toBeDefined(); // we don't know the exact title value
     expect(response.body[0].done).toBeDefined(); // we don't know the exact value
+
+    // for use it in the future in the GET todo by Id test
+    firstTodo = response.body[0];
+  });
+
+   // Test getTodos
+   it("GET /todos/:todoId", async () => {
+    // act
+    const response = await request(app).get(`${endPointUrl}/${firstTodo._id}`);
+
+    // assert
+    expect(response.statusCode).toBe(200);
+    expect(response.body.title ).toBe(firstTodo.title);
+    expect(response.body.done).toBe(firstTodo.done);
+  });
+
+  it("GET /todos/:todoId with Id that does not exist", async () => {
+    // act
+    const response = await request(app).get(`${endPointUrl}/not-valid-id`);
+
+    // assert
+    expect(response.statusCode).toBe(500);
   });
 });

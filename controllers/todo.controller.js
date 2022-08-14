@@ -26,7 +26,7 @@ exports.getTodo = async (req, res , next) => {
     const todoModel = await TodoModel.findById(req.params.todoId);
     if(todoModel){
       res.status(200).json(todoModel);
-    }else{
+    }else{ // if item doesn't exists, Mongo returns 'null', it doesn't throw and expection.
       res.status(404).send();
     }
     
