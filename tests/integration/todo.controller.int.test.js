@@ -22,7 +22,7 @@ describe(endPointUrl, () => {
   });
 
   // integration test for error handling
-  it("should return error 500 on malfored data with POST", async () => {
+  it("should return error 500 on malformed data with POST", async () => {
     // arrange
     const missingDoneData = { title: "Missing done property" };
     const errorBody = {
@@ -52,14 +52,14 @@ describe(endPointUrl, () => {
     firstTodo = response.body[0];
   });
 
-   // Test getTodos
-   it("GET /todos/:todoId", async () => {
+  // Test getTodos
+  it("GET /todos/:todoId", async () => {
     // act
     const response = await request(app).get(`${endPointUrl}/${firstTodo._id}`);
 
     // assert
     expect(response.statusCode).toBe(200);
-    expect(response.body.title ).toBe(firstTodo.title);
+    expect(response.body.title).toBe(firstTodo.title);
     expect(response.body.done).toBe(firstTodo.done);
   });
 
